@@ -13,28 +13,37 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 
 /**
  * 游戏服务器主入口类
+ *
+ * @author Administrator
+ * @date 2019/12/4
  */
 public class ServerMain {
     /**
      * 应用主函数
      *
-     * @param argArray 参数数组
+     * @param args 参数数组
      */
-    static public void main(String[] argArray) {
-        EventLoopGroup bossGroup = new NioEventLoopGroup();     // 这个是故事中的美女
-        EventLoopGroup workerGroup = new NioEventLoopGroup();   // 这个是故事中的服务生
+    public static void main(String[] args) {
+        EventLoopGroup bossGroup = new NioEventLoopGroup();
+        EventLoopGroup workerGroup = new NioEventLoopGroup();
 
         ServerBootstrap b = new ServerBootstrap();
         b.group(bossGroup, workerGroup);
-        b.channel(NioServerSocketChannel.class); // 服务器信道的处理方式
-        b.childHandler(new ChannelInitializer<SocketChannel>() { // 客户端信道的处理器方式
+        // 服务器信道的处理方式
+        b.channel(NioServerSocketChannel.class);
+        // 客户端信道的处理器方式
+        b.childHandler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
                 ch.pipeline().addLast(
-                        new HttpServerCodec(), // Http 服务器编解码器
-                        new HttpObjectAggregator(65535), // 内容长度限制
-                        new WebSocketServerProtocolHandler("/websocket"), // WebSocket 协议处理器, 在这里处理握手、ping、pong 等消息
-                        new GameMsgHandler() // 自定义的消息处理器
+                        // Http 服务器编解码器
+                        new HttpServerCodec(),
+                        // 内容长度限制
+                        new HttpObjectAggregator(65535),
+                        // WebSocket 协议处理器, 在这里处理握手、ping、pong 等消息
+                        new WebSocketServerProtocolHandler("/websocket"),
+                        // 自定义的消息处理器
+                        new GameMsgHandler()
                 );
             }
         });
@@ -56,4 +65,6 @@ public class ServerMain {
             ex.printStackTrace();
         }
     }
+
+
 }

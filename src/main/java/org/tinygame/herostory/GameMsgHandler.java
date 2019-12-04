@@ -7,6 +7,9 @@ import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 
 /**
  * 游戏消息处理器
+ *
+ * @author Administrator
+ * @date 2019/12/4
  */
 public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
     @Override
@@ -14,7 +17,7 @@ public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
         System.out.println("收到客户端消息, msg = " + msg);
 
         // WebSocket 二进制消息会通过 HttpServerCodec 解码成 BinaryWebSocketFrame 类对象
-        BinaryWebSocketFrame frame = (BinaryWebSocketFrame)msg;
+        BinaryWebSocketFrame frame = (BinaryWebSocketFrame) msg;
         ByteBuf byteBuf = frame.content();
 
         // 拿到真实的字节数组并打印
