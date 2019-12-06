@@ -10,40 +10,49 @@ import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.handler.codec.http.HttpObjectAggregator;
 import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * 游戏服务器主入口类
+ * 游戏服务器入口类
  *
  * @author Administrator
  * @date 2019/12/4
  */
 public class ServerMain {
+
+    /**
+     * 日志对象
+     */
+    static private final Logger LOGGER = LoggerFactory.getLogger(ServerMain.class);
+
     /**
      * 应用主函数
      *
-     * @param args 参数数组
+     * @param argArray 参数数组
      */
-    public static void main(String[] args) {
+    static public void main(String[] argArray) {
+        // 拉客的, 也就是故事中的美女
         EventLoopGroup bossGroup = new NioEventLoopGroup();
+        // 干活的, 也就是故事中的服务生
         EventLoopGroup workerGroup = new NioEventLoopGroup();
 
         ServerBootstrap b = new ServerBootstrap();
         b.group(bossGroup, workerGroup);
         // 服务器信道的处理方式
         b.channel(NioServerSocketChannel.class);
-        // 客户端信道的处理器方式
         b.childHandler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
                 ch.pipeline().addLast(
-                        // Http 服务器编解码器
-                        new HttpServerCodec(),
+                        new HttpServerCodec(), // Http 服务器编解码器
                         // 内容长度限制
                         new HttpObjectAggregator(65535),
                         // WebSocket 协议处理器, 在这里处理握手、ping、pong 等消息
                         new WebSocketServerProtocolHandler("/websocket"),
-                        // 自定义的消息处理器
-                        new GameMsgHandler()
+                        new GameMsgDecoder(), // 自定义的消息解码器
+                        new GameMsgEncoder(), // 自定义的消息编码器
+                        new GameMsgHandler() // 自定义的消息处理器
                 );
             }
         });
@@ -54,17 +63,14 @@ public class ServerMain {
             ChannelFuture f = b.bind(12345).sync();
 
             if (f.isSuccess()) {
-                System.out.println("服务器启动成功");
+                LOGGER.info("服务器启动成功!");
             }
 
             // 等待服务器信道关闭,
-            // 也就是不要退出应用程序,
-            // 让应用程序可以一直提供服务
+            // 也就是不要立即退出应用程序, 让应用程序可以一直提供服务
             f.channel().closeFuture().sync();
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
-
-
 }
