@@ -12,15 +12,12 @@ import io.netty.handler.codec.http.HttpServerCodec;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.tinygame.herostory.cmdHandler.CmdHandlerFactory;
 
 /**
- * 游戏服务器入口类
- *
- * @author Administrator
- * @date 2019/12/4
+ * 服务器入口类
  */
 public class ServerMain {
-
     /**
      * 日志对象
      */
@@ -32,24 +29,22 @@ public class ServerMain {
      * @param argArray 参数数组
      */
     static public void main(String[] argArray) {
-        // 拉客的, 也就是故事中的美女
-        EventLoopGroup bossGroup = new NioEventLoopGroup();
-        // 干活的, 也就是故事中的服务生
-        EventLoopGroup workerGroup = new NioEventLoopGroup();
+        CmdHandlerFactory.init();
+        GameMsgRecognizer.init();
+
+        EventLoopGroup bossGroup = new NioEventLoopGroup();   // 拉客的, 也就是故事中的美女
+        EventLoopGroup workerGroup = new NioEventLoopGroup(); // 干活的, 也就是故事中的服务生
 
         ServerBootstrap b = new ServerBootstrap();
         b.group(bossGroup, workerGroup);
-        // 服务器信道的处理方式
-        b.channel(NioServerSocketChannel.class);
+        b.channel(NioServerSocketChannel.class); // 服务器信道的处理方式
         b.childHandler(new ChannelInitializer<SocketChannel>() {
             @Override
             protected void initChannel(SocketChannel ch) throws Exception {
                 ch.pipeline().addLast(
                         new HttpServerCodec(), // Http 服务器编解码器
-                        // 内容长度限制
-                        new HttpObjectAggregator(65535),
-                        // WebSocket 协议处理器, 在这里处理握手、ping、pong 等消息
-                        new WebSocketServerProtocolHandler("/websocket"),
+                        new HttpObjectAggregator(65535), // 内容长度限制
+                        new WebSocketServerProtocolHandler("/websocket"), // WebSocket 协议处理器, 在这里处理握手、ping、pong 等消息
                         new GameMsgDecoder(), // 自定义的消息解码器
                         new GameMsgEncoder(), // 自定义的消息编码器
                         new GameMsgHandler() // 自定义的消息处理器
