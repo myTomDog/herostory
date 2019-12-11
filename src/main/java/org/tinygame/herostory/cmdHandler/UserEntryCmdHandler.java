@@ -12,9 +12,13 @@ import org.tinygame.herostory.msg.GameMsgProtocol;
  */
 public class UserEntryCmdHandler implements ICmdHandler<GameMsgProtocol.UserEntryCmd> {
     @Override
-    public void handle(ChannelHandlerContext ctx, GameMsgProtocol.UserEntryCmd msg) {
+    public void handle(ChannelHandlerContext ctx, GameMsgProtocol.UserEntryCmd cmd) {
+        if (null == ctx
+                || null == cmd) {
+            return;
+        }
+
         // 从指令对象中获取用户 Id 和英雄形象
-        GameMsgProtocol.UserEntryCmd cmd = msg;
         int userId = cmd.getUserId();
         String heroAvatar = cmd.getHeroAvatar();
 
@@ -22,10 +26,11 @@ public class UserEntryCmdHandler implements ICmdHandler<GameMsgProtocol.UserEntr
         resultBuilder.setUserId(userId);
         resultBuilder.setHeroAvatar(heroAvatar);
 
-        // 将用户加入字典
+        // 新建用户,
         User newUser = new User();
         newUser.userId = userId;
         newUser.heroAvatar = heroAvatar;
+        // 并将用户加入管理器
         UserManager.addUser(newUser);
 
         // 将用户 Id 附着到 Channel

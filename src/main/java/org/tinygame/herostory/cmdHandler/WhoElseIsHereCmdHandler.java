@@ -10,7 +10,12 @@ import org.tinygame.herostory.msg.GameMsgProtocol;
  */
 public class WhoElseIsHereCmdHandler implements ICmdHandler<GameMsgProtocol.WhoElseIsHereCmd> {
     @Override
-    public void handle(ChannelHandlerContext ctx, GameMsgProtocol.WhoElseIsHereCmd msg) {
+    public void handle(ChannelHandlerContext ctx, GameMsgProtocol.WhoElseIsHereCmd cmd) {
+        if (null == ctx
+                || null == cmd) {
+            return;
+        }
+
         GameMsgProtocol.WhoElseIsHereResult.Builder resultBuilder = GameMsgProtocol.WhoElseIsHereResult.newBuilder();
 
         for (User currUser : UserManager.listUser()) {
@@ -18,6 +23,7 @@ public class WhoElseIsHereCmdHandler implements ICmdHandler<GameMsgProtocol.WhoE
                 continue;
             }
 
+            // 在这里构建每一个用户的信息
             GameMsgProtocol.WhoElseIsHereResult.UserInfo.Builder userInfoBuilder = GameMsgProtocol.WhoElseIsHereResult.UserInfo.newBuilder();
             userInfoBuilder.setUserId(currUser.userId);
             userInfoBuilder.setHeroAvatar(currUser.heroAvatar);

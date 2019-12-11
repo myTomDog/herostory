@@ -10,14 +10,18 @@ import org.tinygame.herostory.msg.GameMsgProtocol;
  */
 public class UserMoveToCmdHandler implements ICmdHandler<GameMsgProtocol.UserMoveToCmd> {
     @Override
-    public void handle(ChannelHandlerContext ctx, GameMsgProtocol.UserMoveToCmd msg) {
+    public void handle(ChannelHandlerContext ctx, GameMsgProtocol.UserMoveToCmd cmd) {
+        if (null == ctx
+                || null == cmd) {
+            return;
+        }
+
+        // 获取用户 Id
         Integer userId = (Integer) ctx.channel().attr(AttributeKey.valueOf("userId")).get();
 
         if (null == userId) {
             return;
         }
-
-        GameMsgProtocol.UserMoveToCmd cmd = msg;
 
         GameMsgProtocol.UserMoveToResult.Builder resultBuilder = GameMsgProtocol.UserMoveToResult.newBuilder();
         resultBuilder.setMoveUserId(userId);
