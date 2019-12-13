@@ -14,7 +14,7 @@ public class UserEntryCmdHandler implements ICmdHandler<GameMsgProtocol.UserEntr
     @Override
     public void handle(ChannelHandlerContext ctx, GameMsgProtocol.UserEntryCmd cmd) {
         if (null == ctx
-                || null == cmd) {
+            || null == cmd) {
             return;
         }
 
@@ -30,6 +30,7 @@ public class UserEntryCmdHandler implements ICmdHandler<GameMsgProtocol.UserEntr
         User newUser = new User();
         newUser.userId = userId;
         newUser.heroAvatar = heroAvatar;
+        newUser.currHp = 100;
         // 并将用户加入管理器
         UserManager.addUser(newUser);
 
