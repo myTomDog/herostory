@@ -22,7 +22,7 @@ public final class UserManager {
     /**
      * 添加用户
      *
-     * @param newUser
+     * @param newUser 新用户
      */
     static public void addUser(User newUser) {
         if (null != newUser) {
@@ -33,7 +33,7 @@ public final class UserManager {
     /**
      * 根据用户 Id 移除用户
      *
-     * @param userId
+     * @param userId 用户 Id
      */
     static public void removeUserById(int userId) {
         _userMap.remove(userId);
@@ -42,9 +42,19 @@ public final class UserManager {
     /**
      * 列表用户
      *
-     * @return
+     * @return 用户列表
      */
     static public Collection<User> listUser() {
         return _userMap.values();
+    }
+
+    /**
+     * 根据 Id 获取用户
+     *
+     * @param userId 用户 Id
+     * @return 用户对象
+     */
+    static public User getUserById(int userId) {
+        return _userMap.get(userId);
     }
 }

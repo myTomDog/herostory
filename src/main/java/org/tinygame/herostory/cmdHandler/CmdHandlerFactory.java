@@ -41,9 +41,9 @@ public final class CmdHandlerFactory {
         final String packageName = CmdHandlerFactory.class.getPackage().getName();
         // 获取所有的 ICmdHandler 子类
         Set<Class<?>> clazzSet = PackageUtil.listSubClazz(
-                packageName,
-                true,
-                ICmdHandler.class
+            packageName,
+            true,
+            ICmdHandler.class
         );
 
         for (Class<?> clazz : clazzSet) {
@@ -67,8 +67,8 @@ public final class CmdHandlerFactory {
                 Class<?>[] paramTypeArray = currMethod.getParameterTypes();
 
                 if (paramTypeArray.length < 2 ||
-                        paramTypeArray[1] == GeneratedMessageV3.class || // 这里最好加上这个判断
-                        !GeneratedMessageV3.class.isAssignableFrom(paramTypeArray[1])) {
+                    paramTypeArray[1] == GeneratedMessageV3.class || // 这里最好加上这个判断
+                    !GeneratedMessageV3.class.isAssignableFrom(paramTypeArray[1])) {
                     continue;
                 }
 
@@ -85,9 +85,9 @@ public final class CmdHandlerFactory {
                 ICmdHandler<?> newHandler = (ICmdHandler<?>) clazz.newInstance();
 
                 LOGGER.info(
-                        "关联 {} <==> {}",
-                        msgType.getName(),
-                        clazz.getName()
+                    "关联 {} <==> {}",
+                    msgType.getName(),
+                    clazz.getName()
                 );
 
                 _handlerMap.put(msgType, newHandler);

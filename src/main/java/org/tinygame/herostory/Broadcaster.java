@@ -23,25 +23,29 @@ public final class Broadcaster {
     /**
      * 添加信道
      *
-     * @param channel
+     * @param newChannel 客户端信道
      */
-    static public void addChannel(Channel channel) {
-        _channelGroup.add(channel);
+    static public void addChannel(Channel newChannel) {
+        if (null != newChannel) {
+            _channelGroup.add(newChannel);
+        }
     }
 
     /**
      * 移除信道
      *
-     * @param channel
+     * @param targetChannel 客户端信道
      */
-    static public void removeChannel(Channel channel) {
-        _channelGroup.remove(channel);
+    static public void removeChannel(Channel targetChannel) {
+        if (null != targetChannel) {
+            _channelGroup.remove(targetChannel);
+        }
     }
 
     /**
      * 关播消息
      *
-     * @param msg
+     * @param msg 消息对象
      */
     static public void broadcast(Object msg) {
         if (null == msg) {
