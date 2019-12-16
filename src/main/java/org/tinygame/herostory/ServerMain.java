@@ -31,6 +31,7 @@ public class ServerMain {
     static public void main(String[] argArray) {
         CmdHandlerFactory.init();
         GameMsgRecognizer.init();
+        MySqlSessionFactory.init();
 
         EventLoopGroup bossGroup = new NioEventLoopGroup();   // 拉客的, 也就是故事中的美女
         EventLoopGroup workerGroup = new NioEventLoopGroup(); // 干活的, 也就是故事中的服务生

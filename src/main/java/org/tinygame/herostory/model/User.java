@@ -2,16 +2,17 @@ package org.tinygame.herostory.model;
 
 /**
  * 用户
- *
- * @author Administrator
- * @date 2019/12/6
  */
 public class User {
-
     /**
      * 用户 Id
      */
     public int userId;
+
+    /**
+     * 用户名称
+     */
+    public String userName;
 
     /**
      * 英雄形象

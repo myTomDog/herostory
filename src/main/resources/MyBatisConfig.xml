@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+        PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <environments default="dev">
+        <environment id="dev">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.cj.jdbc.Driver"/>
+                <property name="url"
+                          value="jdbc:mysql://127.0.0.1:3306/hero_story?useSSL=false&amp;useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;autoReconnectForPools=true"/>
+                <property name="username" value="root"/>
+                <property name="password" value="root"/>
+            </dataSource>
+        </environment>
+    </environments>
+    <mappers>
+        <mapper resource="org/tinygame/herostory/login/db/IUserDao.xml"/>
+    </mappers>
+</configuration>

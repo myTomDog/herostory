@@ -6,8 +6,6 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.util.AttributeKey;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.tinygame.herostory.cmdHandler.CmdHandlerFactory;
-import org.tinygame.herostory.cmdHandler.ICmdHandler;
 import org.tinygame.herostory.model.UserManager;
 import org.tinygame.herostory.msg.GameMsgProtocol;
 
@@ -41,6 +39,8 @@ public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
             return;
         }
 
+        LOGGER.info("用户离线, userId = {}", userId);
+
         // 移除用户
         UserManager.removeUserById(userId);
 
@@ -53,45 +53,10 @@ public class GameMsgHandler extends SimpleChannelInboundHandler<Object> {
     }
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, Object msg) throws Exception {
-        // 获取消息类
-        Class<?> msgClazz = msg.getClass();
-
-        LOGGER.info(
-            "收到客户端消息, msgClazz = {}, msg = {}",
-            msgClazz.getName(),
-            msg
-        );
-
-        // 获取指令处理器
-        ICmdHandler<? extends GeneratedMessageV3>
-            cmdHandler = CmdHandlerFactory.create(msgClazz);
-
-        if (null == cmdHandler) {
-            LOGGER.error(
-                "未找到相对应的指令处理器, msgClazz = {}",
-                msgClazz.getName()
-            );
-            return;
-        }
-
-        // 处理指令
-        cmdHandler.handle(ctx, cast(msg));
-    }
-
-    /**
-     * 转型消息对象
-     *
-     * @param msg    消息对象
-     * @param <TCmd> 指令类型
-     * @return 指令对象
-     */
-    static private <TCmd extends GeneratedMessageV3> TCmd cast(Object msg) {
-        if (null == msg ||
-            !(msg instanceof GeneratedMessageV3)) {
-            return null;
-        } else {
-            return (TCmd) msg;
+    protected void channelRead0(ChannelHandlerContext ctx, Object msg) {
+        if (msg instanceof GeneratedMessageV3) {
+            // 通过主线程处理器处理消息
+            MainThreadProcessor.getInstance().process(ctx, (GeneratedMessageV3) msg);
         }
     }
 }
