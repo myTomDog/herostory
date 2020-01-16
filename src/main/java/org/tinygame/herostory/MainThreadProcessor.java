@@ -94,6 +94,17 @@ public final class MainThreadProcessor {
     }
 
     /**
+     * 处理消息对象
+     *
+     * @param r Runnable
+     */
+    public void process(Runnable r) {
+        if (null != r) {
+            _es.submit(r);
+        }
+    }
+
+    /**
      * 转型消息对象
      *
      * @param msg    消息对象
