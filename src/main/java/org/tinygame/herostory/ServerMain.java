@@ -13,6 +13,8 @@ import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tinygame.herostory.cmdHandler.CmdHandlerFactory;
+import org.tinygame.herostory.mq.MQProducer;
+import org.tinygame.herostory.util.RedisUtil;
 
 /**
  * 服务器入口类
@@ -26,12 +28,14 @@ public class ServerMain {
     /**
      * 应用主函数
      *
-     * @param argArray 参数数组
+     * @param argvArray 命令行参数数组
      */
-    static public void main(String[] argArray) {
+    static public void main(String[] argvArray) {
         CmdHandlerFactory.init();
         GameMsgRecognizer.init();
         MySqlSessionFactory.init();
+        RedisUtil.init();
+        MQProducer.init();
 
         EventLoopGroup bossGroup = new NioEventLoopGroup();   // 拉客的, 也就是故事中的美女
         EventLoopGroup workerGroup = new NioEventLoopGroup(); // 干活的, 也就是故事中的服务生

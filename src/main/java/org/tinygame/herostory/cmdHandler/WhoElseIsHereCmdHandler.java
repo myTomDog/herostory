@@ -27,6 +27,7 @@ public class WhoElseIsHereCmdHandler implements ICmdHandler<GameMsgProtocol.WhoE
             // 在这里构建每一个用户的信息
             GameMsgProtocol.WhoElseIsHereResult.UserInfo.Builder userInfoBuilder = GameMsgProtocol.WhoElseIsHereResult.UserInfo.newBuilder();
             userInfoBuilder.setUserId(currUser.userId);
+            userInfoBuilder.setUserName(currUser.userName);
             userInfoBuilder.setHeroAvatar(currUser.heroAvatar);
 
             // 构建移动状态
